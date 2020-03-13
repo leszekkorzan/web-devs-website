@@ -60,6 +60,7 @@ const Dashboard = () => {
     const [portfolioUrl, setPortfolioUrl] = useState('');
     const [githubUrl, setGithubUrl] = useState('');
     const [twitterUrl, setTwitterUrl] = useState('');
+    const [verified, setVerified] = useState(false);
 
     const [dbLoaded, setDbLoaded] = useState(false);
     const [dbLoaded2, setDbLoaded2] = useState(false);
@@ -117,6 +118,9 @@ const Dashboard = () => {
                 setGithubUrl(snapshot.val().githubUrl);
                 setTwitterUrl(snapshot.val().twitterUrl);
                 setBio(snapshot.val().bio);
+                if(snapshot.val().verified){
+                    setVerified(snapshot.val().verified)
+                }
             }
             setDbLoaded(true);
         });
@@ -161,7 +165,8 @@ const Dashboard = () => {
             firebase.database().ref('explore/' + userData.uid).set({
                 name: name,
                 bio: bio,
-                id: userData.uid
+                id: userData.uid,
+                verified: verified
             }, (error) => {
                 setIsPrivacyShow(false);
                 setDbLoaded2(false);

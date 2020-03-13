@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import WebsiteIcon from '@material-ui/icons/Web';
 import GithubIcon from '@material-ui/icons/GitHub';
 import TwitterIcon from '@material-ui/icons/Twitter';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
 if (!firebase.apps.length) {
@@ -62,6 +63,7 @@ const User = ({match}) => {
     const [twitterUrl, setTwitterUrl] = useState('');
     const [photoUrl, setPhotoUrl] = useState('');
     const [bio, setBio] = useState('');
+    const [verified, setVerified] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
     const [error] = useState('Not Found');
@@ -76,6 +78,9 @@ const User = ({match}) => {
                 setTwitterUrl(snapshot.val().twitterUrl);
                 setPhotoUrl(snapshot.val().profile_picture);
                 setBio(snapshot.val().bio);
+                if(snapshot.val().verified){
+                    setVerified(snapshot.val().verified)
+                }
             }
             setIsLoading(false);
         });
@@ -97,6 +102,9 @@ const User = ({match}) => {
                         <img className={classes.img} src={photoUrl} alt="profile img"/>
                         <Typography variant="h3" className={classes.name}>
                             {name}
+                            {verified === true ? (
+                                <VerifiedUserIcon style={{ fontSize: 35, color: '#66bb6a' }}/>
+                            ) : (null)}
                         </Typography>
                         <Typography variant="h6" className={classes.description}>
                             {bio}

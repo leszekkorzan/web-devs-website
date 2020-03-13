@@ -53,7 +53,7 @@ const Explore = () => {
                 <div>
                     {data.map(item => {
                         return(
-                            <UserCard key={item.id} id={item.id} name={item.name} bio={item.bio}/>
+                            <UserCard key={item.id} id={item.id} name={item.name} bio={item.bio} verified={item.verified}/>
                         )
                     })}
                 </div>
