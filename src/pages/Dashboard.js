@@ -132,14 +132,16 @@ const Dashboard = () => {
         });
     }
     const updateDB = () => {
-        const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
+        const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+        const twregex = /twitter\.com/;
+        const ghregex = /github\.com/;
         if(portfolioUrl.length > 0 && !regex.test(portfolioUrl)){
             return;
         }
-        if(githubUrl.length > 0 && !regex.test(githubUrl)){
+        if(githubUrl.length > 0 && !ghregex.test(githubUrl)){
             return;
         }
-        if(twitterUrl.length > 0 && !regex.test(twitterUrl)){
+        if(twitterUrl.length > 0 && !twregex.test(twitterUrl)){
             return;
         }
         firebase.database().ref('users/' + userData.uid).set({
