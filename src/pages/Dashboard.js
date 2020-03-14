@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
-
+import Chip from '@material-ui/core/Chip';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database'
@@ -42,6 +42,9 @@ const useStyles = makeStyles(theme => ({
     },
     title: {
         marginBottom: '50px'
+    },
+    chip: {
+        margin: '5px'
     }
 }));
 const Dashboard = () => {
@@ -67,6 +70,22 @@ const Dashboard = () => {
 
     const [checked, setChecked] = useState(false);
 
+    const [chipData, setChipData] = useState([]);
+
+    const [addSkills, setAddSkills] = useState('');
+
+    const handleDelete = chipToDelete => () => {
+        setChipData(chips => chips.filter(chip => chip.label !== chipToDelete.label));
+    };
+    const addSkill = () => {
+        if(addSkills.length > 1 && chipData.length < 10){
+            const even = (element) => element.label === addSkills;
+            if(addSkills.length > 1 && !chipData.some(even)){
+                chipData.push({"label" : addSkills})
+                setAddSkills('');
+            }
+        }
+    }
     const auth = () => {
         setIsLoading(true);
         firebase.auth().onAuthStateChanged((user) => {
@@ -121,6 +140,9 @@ const Dashboard = () => {
                 if(snapshot.val().verified){
                     setVerified(snapshot.val().verified)
                 }
+                if(snapshot.val().skills){
+                    setChipData(snapshot.val().skills);
+                }
             }
             setDbLoaded(true);
         });
@@ -154,7 +176,8 @@ const Dashboard = () => {
             githubUrl: githubUrl,
             twitterUrl: twitterUrl,
             profile_picture : userData.photoURL,
-            bio: bio
+            bio: bio,
+            skills: chipData
         }, (error) => {
             setIsEditShow(false);
             setDbLoaded(false);
@@ -162,17 +185,20 @@ const Dashboard = () => {
     }
     const updateExploreDB = () => {
         if(checked === true){
-            firebase.database().ref('explore/' + userData.uid).set({
-                name: name,
-                bio: bio,
-                id: userData.uid,
-                verified: verified
-            }, (error) => {
-                setIsPrivacyShow(false);
-                setDbLoaded2(false);
-                setIsEditShow(false);
-                setDbLoaded(false);
-            });
+            if(name.length > 3){
+                firebase.database().ref('explore/' + userData.uid).set({
+                    name: name,
+                    bio: bio,
+                    id: userData.uid,
+                    verified: verified
+                }, (error) => {
+                    setIsPrivacyShow(false);
+                    setDbLoaded2(false);
+                    setIsEditShow(false);
+                    setDbLoaded(false);
+                });
+            }
+
         }else{
             firebase.database().ref('explore/' + userData.uid).remove()
             .then(function() {
@@ -186,7 +212,7 @@ const Dashboard = () => {
     }
     const handleChangeCheckbox = event => {
         setChecked(event.target.checked);
-      };
+    };
     return(
         <div className={classes.root}>
             {!isLogged && isLoading ? (
@@ -236,6 +262,24 @@ const Dashboard = () => {
                             </div>
                             <div className={classes.option}>
                                 <TextField disabled={isPrivacyShow} inputProps={{ maxLength: 100 }} multiline rows="4" rowsMax="4" label="Your Bio" variant="outlined" value={bio} onChange={(e) => setBio(e.target.value)} />
+                            </div>
+                            <div className={classes.option}>
+                                <Typography variant="h6">
+                                    Skills
+                                </Typography>
+                                <div className={classes.option}>
+                                    <TextField inputProps={{ maxLength: 20 }} label="Type skill and press enter" variant="outlined" value={addSkills} onChange={e => setAddSkills(e.target.value)} onKeyDown={e => e.key === 'Enter' ? addSkill() : null } />
+                                </div>
+                                {chipData.map(data => {
+                                    return (
+                                        <Chip
+                                            key={data.label}
+                                            label={data.label}
+                                            onDelete={handleDelete(data)}
+                                            className={classes.chip}
+                                        />
+                                    );
+                                })}
                             </div>
                             <div className={classes.option}>
                                 <Button disabled={isPrivacyShow} color="primary" variant="contained" onClick={() => updateDB()}>Update</Button>

@@ -8,6 +8,7 @@ import WebsiteIcon from '@material-ui/icons/Web';
 import GithubIcon from '@material-ui/icons/GitHub';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import Chip from '@material-ui/core/Chip';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
 if (!firebase.apps.length) {
@@ -51,6 +52,10 @@ const useStyles = makeStyles(theme => ({
     },
     error: {
         color: '#f44336',
+    },
+    chip: {
+        margin: '10px',
+        fontWeight: 'bold'
     }
 }));
 const User = ({match}) => {
@@ -64,6 +69,7 @@ const User = ({match}) => {
     const [photoUrl, setPhotoUrl] = useState('');
     const [bio, setBio] = useState('');
     const [verified, setVerified] = useState(false);
+    const [chipData, setChipData] = useState([]);
 
     const [isLoading, setIsLoading] = useState(false);
     const [error] = useState('Not Found');
@@ -80,6 +86,9 @@ const User = ({match}) => {
                 setBio(snapshot.val().bio);
                 if(snapshot.val().verified){
                     setVerified(snapshot.val().verified)
+                }
+                if(snapshot.val().skills){
+                    setChipData(snapshot.val().skills);
                 }
             }
             setIsLoading(false);
@@ -109,6 +118,17 @@ const User = ({match}) => {
                         <Typography variant="h6" className={classes.description}>
                             {bio}
                         </Typography>
+                        {chipData.map(data => {
+                            return (
+                                <Chip
+                                    key={data.label}
+                                    label={data.label}
+                                    className={classes.chip}
+                                    color="primary"
+                                    variant="outlined" 
+                                />
+                            );
+                        })}
                         <div className={classes.links}>
                             {portfolioUrl.length > 3 ? (
                                 <Button
