@@ -267,6 +267,7 @@ const Dashboard = () => {
                             <div className={classes.option}>
                                 <Typography variant="h6">
                                     Skills
+                                    {` (${chipData.length} / 10)`}
                                 </Typography>
                                 <div className={classes.option}>
                                     <TextField disabled={isPrivacyShow} inputProps={{ maxLength: 20 }} label="Type skill and press enter" variant="outlined" value={addSkills} onChange={e => setAddSkills(e.target.value)} onKeyDown={e => e.key === 'Enter' ? addSkill() : null } />
