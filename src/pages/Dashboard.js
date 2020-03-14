@@ -78,7 +78,7 @@ const Dashboard = () => {
         setChipData(chips => chips.filter(chip => chip.label !== chipToDelete.label));
     };
     const addSkill = () => {
-        if(addSkills.length > 1 && chipData.length < 10){
+        if(addSkills.length > 1 && chipData.length < 11){
             const even = (element) => element.label === addSkills;
             if(addSkills.length > 1 && !chipData.some(even)){
                 chipData.push({"label" : addSkills})
@@ -115,6 +115,7 @@ const Dashboard = () => {
         firebase.auth().signOut();
     }
     useEffect(() => {
+        document.title = 'Dashboard - Web Devs';
         auth();
     }, [])
     const ShowEdit = () => {
@@ -268,11 +269,12 @@ const Dashboard = () => {
                                     Skills
                                 </Typography>
                                 <div className={classes.option}>
-                                    <TextField inputProps={{ maxLength: 20 }} label="Type skill and press enter" variant="outlined" value={addSkills} onChange={e => setAddSkills(e.target.value)} onKeyDown={e => e.key === 'Enter' ? addSkill() : null } />
+                                    <TextField disabled={isPrivacyShow} inputProps={{ maxLength: 20 }} label="Type skill and press enter" variant="outlined" value={addSkills} onChange={e => setAddSkills(e.target.value)} onKeyDown={e => e.key === 'Enter' ? addSkill() : null } />
                                 </div>
                                 {chipData.map(data => {
                                     return (
                                         <Chip
+                                            disabled={isPrivacyShow}
                                             key={data.label}
                                             label={data.label}
                                             onDelete={handleDelete(data)}

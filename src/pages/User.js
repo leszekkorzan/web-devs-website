@@ -56,6 +56,13 @@ const useStyles = makeStyles(theme => ({
     chip: {
         margin: '10px',
         fontWeight: 'bold'
+    },
+    skillsDiv: {
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        [theme.breakpoints.up('sm')]: {
+            width: '500px;'
+        }
     }
 }));
 const User = ({match}) => {
@@ -90,6 +97,7 @@ const User = ({match}) => {
                 if(snapshot.val().skills){
                     setChipData(snapshot.val().skills);
                 }
+                document.title = `${snapshot.val().name} - Web Devs`
             }
             setIsLoading(false);
         });
@@ -118,17 +126,19 @@ const User = ({match}) => {
                         <Typography variant="h6" className={classes.description}>
                             {bio}
                         </Typography>
-                        {chipData.map(data => {
-                            return (
-                                <Chip
-                                    key={data.label}
-                                    label={data.label}
-                                    className={classes.chip}
-                                    color="primary"
-                                    variant="outlined" 
-                                />
-                            );
-                        })}
+                        <div className={classes.skillsDiv}>
+                            {chipData.map(data => {
+                                return (
+                                    <Chip
+                                        key={data.label}
+                                        label={data.label}
+                                        className={classes.chip}
+                                        color="primary"
+                                        variant="outlined" 
+                                    />
+                                );
+                            })}  
+                        </div>
                         <div className={classes.links}>
                             {portfolioUrl.length > 3 ? (
                                 <Button

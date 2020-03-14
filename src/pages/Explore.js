@@ -40,6 +40,7 @@ const Explore = () => {
         });
     }
     useEffect(() => {
+        document.title = 'Explore - Web Devs'
         getDB();
     }, [])
     return(

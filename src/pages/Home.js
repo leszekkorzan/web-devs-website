@@ -20,7 +20,7 @@ const Home =  () => {
     const classes = useStyles();
     return(
         <div className={classes.root}>
-            <img className={classes.mainLogo} src={logo}/>
+            <img className={classes.mainLogo} src={logo} alt="Web-Devs Logo"/>
             <Typography variant="h5" className={classes.mainDescription}>
                 Best place to share your dev-profile!
             </Typography>
